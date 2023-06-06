@@ -13,6 +13,10 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
+if (process.env.NODE_ENV === "development") {
+  process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+}
+
 const app = initializeApp(firebaseConfig)
 
 const auth = getAuth(app)

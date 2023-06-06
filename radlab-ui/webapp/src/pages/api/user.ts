@@ -11,8 +11,14 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     }
 
     try {
-      const user = await getDocsByField("users", "email", email as string)
-      console.log("user response from firestore", user)
+      const users = await getDocsByField("users", "email", email as string)
+      if(users.length != 0){
+        console.log("user response from firestore", users)
+        const is_admin = users[0].role == "admin"
+        return res.status(200).json({isAdmin: is_admin})
+      } else {
+        return res.status(400).json({ message: "Provided email does not have access" })
+      }
     } catch (error: any) {
       console.log("error happened during user permission check",error)
 
