@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getAuth, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, GoogleAuthProvider, connectAuthEmulator } from "firebase/auth"
 import { OAuthScopes } from "@/utils/AppConfig"
 
 const firebaseConfig = {
@@ -20,5 +20,9 @@ auth.useDeviceLanguage()
 
 const googleProvider = new GoogleAuthProvider()
 OAuthScopes.forEach((scope) => googleProvider.addScope(scope))
+
+if (process.env.NODE_ENV === "development") {
+  connectAuthEmulator(auth, "http://localhost:9099")
+}
 
 export { app, auth, googleProvider }
