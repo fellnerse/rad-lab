@@ -28,6 +28,10 @@
     "ui": {
       "enabled": true,
       "port": 8090
-    }
+    },
+    "database": {
+      "port": 9000
+    },
+    "singleProjectMode": true
   }
 }
