@@ -193,7 +193,7 @@ const deleteDeployment = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { deployedByEmail } = req.query
-
+  // todo can i use admin sdk here?
   try {
     if (req.method === "GET" && deployedByEmail)
       return getDeploymentsByEmail(req, res, deployedByEmail.toString())

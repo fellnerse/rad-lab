@@ -11,7 +11,9 @@ const getModulesFromGitHub = async (
   res: NextApiResponse,
 ) => {
   try {
+    console.log("hello");
     const secret = await getSecretKeyValue(GIT_TOKEN_SECRET_KEY_NAME)
+    console.log("got secret:", secret)
     const modules = await getGitHubModules(secret)
     res.status(200).json(modules)
     return

@@ -18,6 +18,8 @@ import AdminSettingsButton from "@/components/AdminSettingsButton"
 import NewDeploymentButton from "@/components/NewDeploymentButton"
 import EmptyAdminState from "@/components/EmptyAdminState"
 import EmptyState from "@/components/EmptyState"
+import { auth } from "@/utils/firebase"
+import { decodeJwt } from "jose"
 
 enum DEPLOYMENT_TAB {
   ALL,
@@ -38,9 +40,12 @@ const Deployments: React.FC<DeploymentsProps> = () => {
   )
 
   const fetchData = async () => {
+    const token = await auth.currentUser?.getIdToken(true)
+    console.log("token from frontend", decodeJwt(token!));
+    
     Promise.all([
-      axios.get(`/api/deployments`),
-      axios.get(`/api/deployments?deployedByEmail=${user?.email}`),
+      axios.get(`/api/deployments`, {headers: {Authorization: token!}}),
+      axios.get(`/api/deployments?deployedByEmail=${user?.email}`, {headers: {Authorization: token!}}),
     ])
       .then(([deployRes, adminDeployRes]) => {
         const allDeployData = DeploymentsParser.parse(

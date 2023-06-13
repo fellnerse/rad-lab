@@ -1,12 +1,14 @@
 import admin from "firebase-admin"
 import { getFirestore } from "firebase-admin/firestore"
 
+import { applicationDefault, initializeApp } from 'firebase-admin/app';
+
 if (admin.apps.length === 0) {
-  admin.initializeApp()
+  initializeApp({credential: applicationDefault()})
 }
+
 const db = getFirestore()
-// todo find way of using emulator also with firebase-admin
-// if (window.location.hostname === "localhost") {
-//   connectFirestoreEmulator(db, "localhost", 8080)
-// }
-export { db }
+
+const auth = admin.auth()
+
+export { db, auth }

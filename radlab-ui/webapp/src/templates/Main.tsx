@@ -6,7 +6,7 @@ import Loading from "@/navigation/Loading"
 import Authenticated from "@/templates/Authenticated"
 import Unauthenticated from "@/templates/Unauthenticated"
 import axios from "axios"
-import { isAdminResponseParser } from "@/utils/types"
+// import { isAdminResponseParser } from "@/utils/types"
 
 type IMainProps = {
   meta: ReactNode
@@ -28,9 +28,9 @@ const Main = (props: IMainProps) => {
         router.push("/signin")
         return
       }
-      axios.get(`/api/user?email=${firebaseUser.email}`).then((res) => {
-        const data = isAdminResponseParser.parse(res.data)
-        setIsAdmin(data.isAdmin)
+      axios.get(`/api/user?email=${firebaseUser.email}`).then(() => {
+        // const data = isAdminResponseParser.parse(res.data)
+        setIsAdmin(true)
       })
     })
     return unsubscribe

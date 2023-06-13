@@ -16,6 +16,8 @@ import NotAuthorized from "@/components/NotAuthorized"
 import Loading from "@/navigation/Loading"
 import { isAdminResponseParser } from "@/utils/types"
 import { userStore } from "@/store"
+import nookies from "nookies";
+import { auth } from "@/utils/firebase"
 
 interface AuthenticatedProps {
   meta: React.ReactNode
@@ -31,6 +33,7 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
   const [userIdentity, setUserIdentity] = useState(false)
   const [loading, setLoading] = useState(true)
   const isAdmin = userStore((state) => state.isAdmin)
+  const setUser = userStore((state) => state.setUser)
 
   useEffect(() => {
     axios
@@ -46,6 +49,28 @@ const Authenticated: React.FC<AuthenticatedProps> = ({
         setLoading(false)
       })
   }, [])
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as any).nookies = nookies;
+    }
+    return auth.onIdTokenChanged(async (user) => {
+      console.log(`token changed!`);
+      if (!user) {
+        console.log(`no token found...`);
+        setUser(null);
+        nookies.destroy(null, "token");
+        nookies.set(null, "token", "", {path: '/'});
+        return;
+      }
+
+      console.log(`updating token...`);
+      const token = await user.getIdToken(true);
+      setUser(user);
+      nookies.destroy(null, "token");
+      nookies.set(null, "token", token, {path: '/'});
+    });
+  }, []);
 
   if (loading) return <Loading />
   if (!userIdentity) return <NotAuthorized status={true} />
